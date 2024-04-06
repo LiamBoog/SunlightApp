@@ -1,14 +1,20 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import Program
 from django.shortcuts import render
+import random
+from django.urls import reverse
 
-def index(request) -> HttpResponse:
+
+def index(request, colour="#ffffff") -> HttpResponse:
     programs = [program.name for program in Program.objects.all()]
     context = {
-        "programs": programs
+        "programs": programs,
+        "colour": colour
     }
     return render(request, "sunlight/index.html", context)
 
 
-def test(request, id: int) -> HttpResponse | Exception:
-    return HttpResponse(f"Test {id}")
+def get_sunlight_colour(request):
+    colour = "#" + "".join((hex(random.randint(0, 255))[2:] for _ in range(3)))
+    print(colour)
+    return index(request, colour)

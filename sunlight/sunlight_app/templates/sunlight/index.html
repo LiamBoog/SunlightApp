@@ -1,19 +1,21 @@
 <!doctype html>
 <html lang="en-US">
   <head>
+    <style>
+      .random_colour {
+        background-color: {{ colour }}
+      }
+    </style>
     <meta charset="utf-8" />
     <title>Programs</title>
   </head>
-  <body>
-    {% if programs %}
-        <ul>
-        {% for program in programs %}
-            <li>{{ program }}</li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No programs are available.</p>
-    {% endif %}
+  <body class="random_colour">
+    <form action="{% url "get_sunlight_colour" %}" method="get">
+      {% csrf_token %}
+      <button type="submit" name="get_sunlight_colour">
+        Get Random Colour
+      </button>
+    </form>
   </body>
 </html>
 
