@@ -15,9 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-import sunlight_app.views
 
 urlpatterns = [
-    path("sunlight_app/", sunlight_app.views.index, name="sunlight_app"),
+    path("sunlight/", include("sunlight_app.urls")),
     path('admin/', admin.site.urls),
 ]

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>Programs</title>
+  </head>
+  <body>
+    {% if programs %}
+        <ul>
+        {% for program in programs %}
+            <li>{{ program }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No programs are available.</p>
+    {% endif %}
+  </body>
+</html>
+
+
