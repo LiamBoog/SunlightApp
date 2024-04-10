@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("/get_colour", views.get_sunlight_colour, name="get_sunlight_colour")
+    path("get_colour", views.get_sunlight_colour, name="get_sunlight_colour"),
+    path("<str:colour>", views.coloured_index, name="coloured_index"),
 ]

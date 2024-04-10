@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="en-US">
   <head>
+    {% if colour %}
     <style>
       .random_colour {
         background-color: {{ colour }}
       }
     </style>
+    {% endif %}
     <meta charset="utf-8" />
     <title>Programs</title>
   </head>
