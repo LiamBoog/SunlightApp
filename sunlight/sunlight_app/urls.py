@@ -1,9 +1,10 @@
-from django.urls import path
+from django.urls import path, register_converter
+from . import views, converters
 
-from . import views
+register_converter(converters.HexadecimalConverter, "hex")
 
 urlpatterns = [
     path("", views.index, name="index"),
     path("get_colour", views.get_sunlight_colour, name="get_sunlight_colour"),
-    path("<str:colour>", views.coloured_index, name="coloured_index"),
+    path("<hex:colour>", views.coloured_index, name="coloured_index"),
 ]
