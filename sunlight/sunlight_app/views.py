@@ -2,7 +2,6 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from .models import Program
 from django.shortcuts import render, redirect
 import random
-from django.urls import reverse
 
 
 def index(request: HttpRequest) -> HttpResponse:
