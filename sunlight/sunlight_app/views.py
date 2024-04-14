@@ -13,13 +13,13 @@ def index(request: HttpRequest) -> HttpResponse:
 
 
 def get_sunlight_colour(request: HttpRequest):
-    colour = "".join((hex(random.randint(0, 255))[2:] for _ in range(3)))
+    colour = "".join((hex(random.randint(0, 15))[2:] for _ in range(6)))
     return redirect("coloured_index", colour=colour)
 
 
-def coloured_index(request: HttpRequest, colour):
+def coloured_index(request: HttpRequest, colour: str):
     context = {
         "programs": [program.name for program in Program.objects.all()],
-        "colour": colour
+        "colour": f"#{colour}"
     }
     return render(request, "sunlight/index.html", context)
