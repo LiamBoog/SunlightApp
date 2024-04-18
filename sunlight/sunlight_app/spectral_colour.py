@@ -82,7 +82,6 @@ class ColourSystem:
             # Normalize the rgb vector
             rgb /= np.max(rgb)
 
-        print(rgb)
         return self.rgb_to_hex(rgb)
 
     def rgb_to_hex(self, rgb):
@@ -134,19 +133,15 @@ def custom_sd_to_srgb(t: float) -> str:
         illuminant=colour.SDS_ILLUMINANTS["D65"])
     xyz /= np.sum(xyz)
     srgb = colour.XYZ_to_sRGB(xyz)
-    # srgb -= min if (min := np.min(srgb)) < 0 else 0
     srgb /= np.max(srgb)
     srgb = np.clip(srgb, 0, 1)
     srgb_hex = colour.notation.RGB_to_HEX(srgb)
-    print(xyz, srgb, srgb_hex)
-    return srgb_hex, tuple(srgb)
+    return srgb_hex
 
 
 def stolen_sd_to_rgb(t: float) -> str:
     blackbody_spectrum = colour.sd_blackbody(t, colour.SpectralShape(380, 780, 5)) * 1e9
     srgb = colour_system.spectral_radiance_to_rgb(blackbody_spectrum.values)
-    xyz = colour_system.spec_to_xyz(blackbody_spectrum.values)
-    print(xyz, srgb)
     return srgb
 
 
@@ -157,6 +152,10 @@ def plot_gradients(a_colours: list[tuple[float, float, float]], b_colours: list[
         ax2.bar(i, 1, color=b_colours[i], edgecolor="none")
     plt.tight_layout()
     plt.show()
+
+
+def hex_to_rgb(hex_code: str) -> tuple[float, float, float]:
+    return tuple(int(hex_code.lstrip("#")[i:i + 2], 16) / 255 for i in (0, 2, 4))
 
 
 T = 1500
@@ -170,5 +169,5 @@ colour_system = ColourSystem(
 
 temp_range = range(100, 10000, 250)
 plot_gradients(
-    [custom_sd_to_srgb(T)[1] for T in temp_range],
-    [tuple(int(stolen_sd_to_rgb(T).lstrip("#")[i:i + 2], 16) / 255 for i in (0, 2, 4)) for T in temp_range])
+    [hex_to_rgb(custom_sd_to_srgb(T)) for T in temp_range],
+    [hex_to_rgb(stolen_sd_to_rgb(T)) for T in temp_range])
