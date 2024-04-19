@@ -15,5 +15,3 @@ def custom_sd_to_srgb(t: float) -> str:
     srgb_hex = colour.notation.RGB_to_HEX(srgb)
     return str(srgb_hex)
 
-
-print(custom_sd_to_srgb(4000))

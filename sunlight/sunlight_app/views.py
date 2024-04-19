@@ -1,7 +1,8 @@
-from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
+from django.http import HttpResponse, HttpRequest
 from .models import Program
 from django.shortcuts import render, redirect
 import random
+from . import spectral_colour
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -22,3 +23,8 @@ def coloured_index(request: HttpRequest, colour: str):
         "colour": f"#{colour}"
     }
     return render(request, "sunlight/index.html", context)
+
+
+def render_blackbody(request: HttpRequest, temperature: int):
+    colour = spectral_colour.custom_sd_to_srgb(float(temperature))[1:]
+    return redirect("coloured_index", colour=colour)
