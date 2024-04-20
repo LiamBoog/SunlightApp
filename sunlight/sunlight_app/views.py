@@ -26,5 +26,5 @@ def coloured_index(request: HttpRequest, colour: str):
 
 
 def render_blackbody(request: HttpRequest, temperature: int):
-    colour = spectral_colour.custom_sd_to_srgb(float(temperature))[1:]
+    colour = spectral_colour.blackbody_temperature_to_srgb(float(temperature))[1:]
     return redirect("coloured_index", colour=colour)
