@@ -26,7 +26,25 @@ def get_blackbody(wavelength: NDArray[int]) -> colour.SpectralDistribution:
     exponent = h * c / (k * wavelength_meters * SOLAR_BLACKBODY_TEMPERATURE)
     denominator = wavelength_meters ** 5 * (np.exp(exponent) - 1)
     spectral_radiance = (2 * h * c * c) / denominator
+    scattering_coefficient = get_total_scattering_coefficient(0, wavelength_meters)
+    spectral_radiance = scattering_coefficient * spectral_radiance
     return colour.SpectralDistribution(spectral_radiance, wavelength)
+
+
+def get_air_mass(zenith_angle: float) -> float:
+    r = 6371 / 9
+    a = 2 * r + 1
+    cosine = np.cos(np.radians(zenith_angle))
+    square_root = np.sqrt((r * cosine) ** 2 + a)
+    denominator = square_root + r * cosine
+    return a / denominator
+
+
+def get_total_scattering_coefficient(zenith_angle: float, wavelength: NDArray[float]) -> float:
+    scattering_coefficient = 1e-26
+    x = -(get_air_mass(zenith_angle) * scattering_coefficient / wavelength ** 4)
+    co = np.exp(x)
+    return co
 
 
 def spectral_radiance_to_srgb() -> str:
