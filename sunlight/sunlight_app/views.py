@@ -32,6 +32,6 @@ def coloured_index(request: HttpRequest, colour: str):
     return render(request, "sunlight/index.html", context)
 
 
-def render_blackbody(request: HttpRequest, temperature: int):
+def render_blackbody(_: HttpRequest, temperature: int):
     colour = spectral_colour.blackbody_temperature_to_srgb(float(temperature))[1:]
     return redirect(urls.COLOURED_INDEX, colour=colour)

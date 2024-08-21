@@ -7,7 +7,6 @@ import numpy as np
 from numpy.typing import NDArray
 from scipy.constants import h, c, k
 
-
 SOLAR_BLACKBODY_TEMPERATURE = 5777
 
 
@@ -36,17 +35,25 @@ def solar_spectral_radiance(wavelength: NDArray[int], zenith_angle: float) -> co
 
 
 def air_mass_coefficient(zenith_angle: float) -> float:
-    r = 6371 / 9
-    a = 2 * r + 1
+    r = 6371 / 8.43
     cosine = np.cos(np.radians(zenith_angle))
-    square_root = np.sqrt((r * cosine) ** 2 + a)
-    denominator = square_root + r * cosine
-    return a / denominator
+    square_root = np.sqrt((r * cosine) ** 2 + 2 * r + 1)
+    return square_root - r * cosine
+
+
+def tropospheric_air_mass_coefficient(zenith_angle: float) -> float:
+    r = 6371 / 2
+    cosine = np.cos(np.radians(zenith_angle))
+    square_root = np.sqrt((r * cosine) ** 2 + 2 * r + 1)
+    return square_root - r * cosine
+    pass
 
 
 def get_total_scattering_coefficient(zenith_angle: float, wavelength: NDArray[float]) -> float:
-    scattering_coefficient = 1e-26
-    x = -(air_mass_coefficient(zenith_angle) * scattering_coefficient / wavelength ** 4)
+    molecular_scattering_coefficient = 8.66e-27
+    aerosol_scattering_coefficient = 1.63e-8
+    x = -(air_mass_coefficient(zenith_angle) * molecular_scattering_coefficient / wavelength ** 4
+          + tropospheric_air_mass_coefficient(zenith_angle) * aerosol_scattering_coefficient / wavelength)
     co = np.exp(x)
     return co
 
@@ -69,15 +76,13 @@ def solar_zenith_angle() -> float:
     sun: ephem.Body = ephem.Sun()
     latitude, longitude = geocoder.ip("me").latlng
     observer = ephem.Observer()
-    observer.lat = latitude
-    observer.lon = longitude
-    observer.date = ephem.Date(datetime.datetime.now(datetime.UTC))
+    observer.lat = str(latitude)
+    observer.lon = str(longitude)
     observer.temperature = 15
     sun.compute(observer)
-    return 90 + np.degrees(sun.alt)
+    return min(90 - np.degrees(sun.alt), 90)
 
 
 def get_sunlight_colour() -> str:
     zenith = solar_zenith_angle()
     return solar_zenith_to_srgb(zenith)
-
