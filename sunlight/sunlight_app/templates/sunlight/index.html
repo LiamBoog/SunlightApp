@@ -12,10 +12,16 @@
     <title>Programs</title>
   </head>
   <body class="random_colour">
-    <form action="{% url "get_sunlight_colour" %}" method="get">
+    <form action="{% url button_url1 %}" method="get">
       {% csrf_token %}
-      <button type="submit" name="get_sunlight_colour">
+      <button type="submit" name={{ button_url1 }}>
         Get Random Colour
+      </button>
+    </form>
+    <form action="{% url button_url2 %}" method="get">
+      {% csrf_token %}
+      <button type="submit" name={{ button_url2 }}>
+        Get Sunlight Colour
       </button>
     </form>
   </body>
