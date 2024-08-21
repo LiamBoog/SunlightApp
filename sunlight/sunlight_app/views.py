@@ -12,14 +12,13 @@ def index(request: HttpRequest) -> HttpResponse:
     return render(request, "sunlight/index.html", context)
 
 
-def get_random_colour(request: HttpRequest):
+def get_random_colour(_: HttpRequest):
     colour = "".join((hex(random.randint(0, 15))[2:] for _ in range(6)))
     return redirect(urls.COLOURED_INDEX, colour=colour)
 
 
-def get_sunlight_colour(request: HttpRequest):
-    zenith = spectral_colour.solar_zenith_angle()
-    colour = spectral_colour.solar_zenith_to_srgb(zenith)
+def get_sunlight_colour(_: HttpRequest):
+    colour = spectral_colour.get_sunlight_colour()
     return redirect(urls.COLOURED_INDEX, colour=colour[1:])
 
 

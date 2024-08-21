@@ -77,5 +77,7 @@ def solar_zenith_angle() -> float:
     return 90 + np.degrees(sun.alt)
 
 
-print((zenith := solar_zenith_angle()))
-print(solar_zenith_to_srgb(zenith))
+def get_sunlight_colour() -> str:
+    zenith = solar_zenith_angle()
+    return solar_zenith_to_srgb(zenith)
+
