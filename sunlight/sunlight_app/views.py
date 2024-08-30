@@ -5,11 +5,14 @@ import random
 from . import spectral_colour, urls
 
 
+INDEX_TEMPLATE = "sunlight/index.html"
+
+
 def index(request: HttpRequest) -> HttpResponse:
     context = {
         "programs": [program.name for program in Program.objects.all()]
     }
-    return render(request, "sunlight/index.html", context)
+    return render(request, INDEX_TEMPLATE, context)
 
 
 def get_random_colour(_: HttpRequest):
@@ -26,10 +29,10 @@ def coloured_index(request: HttpRequest, colour: str):
     context = {
         "programs": [program.name for program in Program.objects.all()],
         "colour": f"#{colour}",
-        "button_url1": urls.GET_RANDOM_COLOUR,
-        "button_url2": urls.GET_SUNLIGHT_COLOUR,
+        "random_colour_url": urls.GET_RANDOM_COLOUR,
+        "sunlight_colour_url": urls.GET_SUNLIGHT_COLOUR,
     }
-    return render(request, "sunlight/index.html", context)
+    return render(request, INDEX_TEMPLATE, context)
 
 
 def render_blackbody(_: HttpRequest, temperature: int):
