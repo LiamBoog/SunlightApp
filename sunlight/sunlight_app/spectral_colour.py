@@ -34,14 +34,14 @@ def solar_spectral_radiance(wavelength: NDArray[int], zenith_angle: float) -> co
     return colour.SpectralDistribution(spectral_radiance, wavelength)
 
 
-def air_mass_coefficient(zenith_angle: float) -> float:
+def molecular_air_mass_coefficient(zenith_angle: float) -> float:
     r = 6371 / 8.43
     cosine = np.cos(np.radians(zenith_angle))
     square_root = np.sqrt((r * cosine) ** 2 + 2 * r + 1)
     return square_root - r * cosine
 
 
-def tropospheric_air_mass_coefficient(zenith_angle: float) -> float:
+def tropospheric_aerosol_air_mass_coefficient(zenith_angle: float) -> float:
     r = 6371 / 2
     cosine = np.cos(np.radians(zenith_angle))
     square_root = np.sqrt((r * cosine) ** 2 + 2 * r + 1)
@@ -52,8 +52,8 @@ def tropospheric_air_mass_coefficient(zenith_angle: float) -> float:
 def get_total_scattering_coefficient(zenith_angle: float, wavelength: NDArray[float]) -> float:
     molecular_scattering_coefficient = 8.66e-27
     aerosol_scattering_coefficient = 1.63e-8
-    x = -(air_mass_coefficient(zenith_angle) * molecular_scattering_coefficient / wavelength ** 4
-          + tropospheric_air_mass_coefficient(zenith_angle) * aerosol_scattering_coefficient / wavelength)
+    x = -(molecular_air_mass_coefficient(zenith_angle) * molecular_scattering_coefficient / wavelength ** 4
+          + tropospheric_aerosol_air_mass_coefficient(zenith_angle) * aerosol_scattering_coefficient / wavelength)
     co = np.exp(x)
     return co
 
